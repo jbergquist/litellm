@@ -102,4 +102,14 @@ describe("ModelConnectionTest", () => {
     expect(screen.getByText("Failed to prepare model data. Please check your form inputs.")).toBeInTheDocument();
     expect(testConnectionRequest).not.toHaveBeenCalled();
   });
+
+  it("prompts for a model selection instead of crashing when no mapping was prepared", async () => {
+    vi.mocked(prepareModelAddRequest).mockResolvedValue([] as never);
+
+    render(<ModelConnectionTest formValues={{}} accessToken="sk-test" testMode="chat" />);
+    await finishConnectionTest();
+
+    expect(screen.getByText("Please select at least one model before testing the connection.")).toBeInTheDocument();
+    expect(testConnectionRequest).not.toHaveBeenCalled();
+  });
 });

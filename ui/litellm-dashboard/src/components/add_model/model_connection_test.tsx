@@ -50,6 +50,13 @@ const ModelConnectionTest: React.FC<ModelConnectionTestProps> = ({
         return;
       }
 
+      if (result.length === 0) {
+        setError("Please select at least one model before testing the connection.");
+        setIsSuccess(false);
+        setIsLoading(false);
+        return;
+      }
+
       const { litellmParamsObj, modelInfoObj } = result[0];
       const response = await testConnectionRequest(accessToken, litellmParamsObj, modelInfoObj, modelInfoObj?.mode);
 
