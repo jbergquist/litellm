@@ -3572,7 +3572,7 @@ def _complete_nadir(ctx: CompletionDispatchContext) -> _CompletionDispatchResult
 
 
 def _complete_opencode(
-    ctx: _CompletionDispatchContext,
+    ctx: CompletionDispatchContext,
 ) -> _CompletionDispatchResult:
     from litellm.llms.opencode.chat.handler import complete_opencode
 
