@@ -82719,7 +82719,22 @@
         "supports_parallel_function_calling": true,
         "supports_response_schema": true,
         "cache_read_input_token_cost": 6e-09,
-        "cache_creation_input_token_cost": 0.0
+        "cache_creation_input_token_cost": 0.0,
+        "off_peak_pricing": {
+            "cache_read_input_token_cost": 3e-09,
+            "input_cost_per_token": 1.5e-07,
+            "output_cost_per_token": 6e-07,
+            "windows": [
+                {
+                    "hours_utc": ["00:00-01:00", "04:00-06:00", "10:00-00:00"],
+                    "weekdays": [1, 2, 3, 4, 5]
+                },
+                {
+                    "hours_utc": "00:00-00:00",
+                    "weekdays": [6, 7]
+                }
+            ]
+        }
     },
     "opencode_go/deepseek-v4-pro": {
         "input_cost_per_token": 1.32e-06,
@@ -82735,7 +82750,22 @@
         "supports_parallel_function_calling": true,
         "supports_response_schema": true,
         "cache_read_input_token_cost": 4.4e-08,
-        "cache_creation_input_token_cost": 0.0
+        "cache_creation_input_token_cost": 0.0,
+        "off_peak_pricing": {
+            "cache_read_input_token_cost": 2.2e-08,
+            "input_cost_per_token": 6.6e-07,
+            "output_cost_per_token": 1.98e-06,
+            "windows": [
+                {
+                    "hours_utc": ["00:00-01:00", "04:00-06:00", "10:00-00:00"],
+                    "weekdays": [1, 2, 3, 4, 5]
+                },
+                {
+                    "hours_utc": "00:00-00:00",
+                    "weekdays": [6, 7]
+                }
+            ]
+        }
     },
     "opencode_go/glm-5.1": {
         "input_cost_per_token": 1.4e-06,
@@ -82926,7 +82956,22 @@
         "supports_system_messages": true,
         "supports_parallel_function_calling": true,
         "supports_response_schema": true,
-        "cache_read_input_token_cost": 6e-09
+        "cache_read_input_token_cost": 6e-09,
+        "off_peak_pricing": {
+            "cache_read_input_token_cost": 3e-09,
+            "input_cost_per_token": 1.5e-07,
+            "output_cost_per_token": 6e-07,
+            "windows": [
+                {
+                    "hours_utc": ["00:00-01:00", "04:00-06:00", "10:00-00:00"],
+                    "weekdays": [1, 2, 3, 4, 5]
+                },
+                {
+                    "hours_utc": "00:00-00:00",
+                    "weekdays": [6, 7]
+                }
+            ]
+        }
     },
     "opencode_go/deepseek-v4.1-flash": {
         "input_cost_per_token": 3e-07,
@@ -82941,7 +82986,22 @@
         "supports_system_messages": true,
         "supports_parallel_function_calling": true,
         "supports_response_schema": true,
-        "cache_read_input_token_cost": 6e-09
+        "cache_read_input_token_cost": 6e-09,
+        "off_peak_pricing": {
+            "cache_read_input_token_cost": 3e-09,
+            "input_cost_per_token": 1.5e-07,
+            "output_cost_per_token": 6e-07,
+            "windows": [
+                {
+                    "hours_utc": ["00:00-01:00", "04:00-06:00", "10:00-00:00"],
+                    "weekdays": [1, 2, 3, 4, 5]
+                },
+                {
+                    "hours_utc": "00:00-00:00",
+                    "weekdays": [6, 7]
+                }
+            ]
+        }
     },
     "opencode_go/glm-5.3": {
         "input_cost_per_token": 1.4e-06,
