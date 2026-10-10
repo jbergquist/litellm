@@ -22,7 +22,7 @@ import litellm
 import pytest
 
 from litellm.llms.opencode.common_utils import is_responses_model
-from litellm.llms.opencode.go.responses.transformation import (
+from litellm.llms.opencode.responses.transformation import (
     OpenCodeGoResponsesAPIConfig,
 )
 from litellm.types.utils import LlmProviders

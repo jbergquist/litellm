@@ -21,7 +21,7 @@ from httpx import Response
 import litellm
 import pytest
 
-from litellm.llms.opencode.zen.responses.transformation import (
+from litellm.llms.opencode.responses.transformation import (
     OpenCodeZenResponsesAPIConfig,
 )
 from litellm.types.utils import LlmProviders

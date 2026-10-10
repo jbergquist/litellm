@@ -9306,13 +9306,13 @@ class ProviderConfigManager:
                 use_openai_path=mantle_base_segment(model, litellm.model_cost) == "openai/v1"
             )
         elif litellm.LlmProviders.OPENCODE_ZEN == provider:
-            from litellm.llms.opencode.zen.responses.transformation import (
+            from litellm.llms.opencode.responses.transformation import (
                 OpenCodeZenResponsesAPIConfig,
             )
 
             return OpenCodeZenResponsesAPIConfig()
         elif litellm.LlmProviders.OPENCODE_GO == provider:
-            from litellm.llms.opencode.go.responses.transformation import (
+            from litellm.llms.opencode.responses.transformation import (
                 OpenCodeGoResponsesAPIConfig,
             )
 

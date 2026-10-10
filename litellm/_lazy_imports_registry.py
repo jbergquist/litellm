@@ -1057,11 +1057,11 @@ _LLM_CONFIGS_IMPORT_MAP: Final = {
         "OpenRouterResponsesAPIConfig",
     ),
     "OpenCodeZenResponsesAPIConfig": (
-        ".llms.opencode.zen.responses.transformation",
+        ".llms.opencode.responses.transformation",
         "OpenCodeZenResponsesAPIConfig",
     ),
     "OpenCodeGoResponsesAPIConfig": (
-        ".llms.opencode.go.responses.transformation",
+        ".llms.opencode.responses.transformation",
         "OpenCodeGoResponsesAPIConfig",
     ),
     "BedrockMantleResponsesAPIConfig": (

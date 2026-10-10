@@ -83,3 +83,13 @@ class OpenCodeResponsesAPIConfig(OpenAIResponsesAPIConfig):
     def supports_native_websocket(self) -> bool:
         """OpenCode does not support native WebSocket for the Responses API."""
         return False
+
+
+class OpenCodeZenResponsesAPIConfig(OpenCodeResponsesAPIConfig):
+    def __init__(self) -> None:
+        super().__init__(surface="zen")
+
+
+class OpenCodeGoResponsesAPIConfig(OpenCodeResponsesAPIConfig):
+    def __init__(self) -> None:
+        super().__init__(surface="go")

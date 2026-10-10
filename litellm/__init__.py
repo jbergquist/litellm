@@ -1939,7 +1939,8 @@ if TYPE_CHECKING:
     from .llms.openrouter.responses.transformation import (
         OpenRouterResponsesAPIConfig as OpenRouterResponsesAPIConfig,
     )
-    from .llms.opencode.zen.responses.transformation import (
+    from .llms.opencode.responses.transformation import (
+        OpenCodeGoResponsesAPIConfig as OpenCodeGoResponsesAPIConfig,
         OpenCodeZenResponsesAPIConfig as OpenCodeZenResponsesAPIConfig,
     )
     from .llms.bedrock.responses.transformation import (
