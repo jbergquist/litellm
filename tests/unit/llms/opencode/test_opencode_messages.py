@@ -371,7 +371,7 @@ class TestMockedMessagesCompletion:
             return_value=Response(200, json=_anthropic_response("Claude speaks"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         result = litellm.completion(
             model="opencode_zen/claude-sonnet-4-5",
@@ -396,7 +396,7 @@ class TestMockedMessagesCompletion:
             return_value=Response(200, json=_anthropic_response("ok"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-zen-123")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-zen-123")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         litellm.completion(
             model="opencode_zen/claude-sonnet-4-5",
@@ -416,7 +416,7 @@ class TestMockedMessagesCompletion:
             return_value=Response(200, json=_anthropic_response("anthropic body"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         litellm.completion(
             model="opencode_zen/claude-sonnet-4-5",
@@ -472,7 +472,7 @@ class TestMockedMessagesCompletion:
             return_value=Response(200, json={"choices": [{"message": {"role": "assistant", "content": "wrong"}}]})
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         litellm.completion(
             model="opencode_zen/claude-sonnet-4-5",
@@ -494,7 +494,7 @@ class TestMockedMessagesCompletion:
             return_value=Response(200, json=_anthropic_response("go messages"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-go-123")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-go-123")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         litellm.completion(
             model="opencode_go/minimax-m2.5",
@@ -570,6 +570,35 @@ class TestMockedMessagesCompletion:
         assert api_key_header == "sk-opencode"
         assert "sk-global-other-provider" not in api_key_header
 
+    def test_global_api_key_never_used_without_an_opencode_key(self, respx_mock, monkeypatch):
+        """No OpenCode key configured must raise, never fall back to litellm.api_key.
+
+        The precedence test above only proves a surface-specific key wins when
+        both are set; it does not cover the actually-vulnerable path where no
+        OpenCode key exists at all. That gap is exactly the cross-provider
+        credential disclosure this regression guards: without it, a
+        mixed-provider deployment's global default key would be forwarded to
+        opencode.ai as the x-api-key credential.
+        """
+        respx_mock.post("https://opencode.ai/zen/v1/messages").mock(
+            return_value=Response(200, json=_anthropic_response("ok"))
+        )
+
+        monkeypatch.setattr(litellm, "api_key", "sk-global-other-provider")
+        monkeypatch.setattr(litellm, "opencode_zen_api_key", None)
+        monkeypatch.setattr(litellm, "opencode_api_key", None)
+        monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
+
+        with pytest.raises(litellm.exceptions.APIConnectionError):
+            litellm.completion(
+                model="opencode_zen/claude-sonnet-4-5",
+                messages=[{"role": "user", "content": "hi"}],
+                custom_llm_provider="opencode_zen",
+                max_tokens=256,
+            )
+
+        assert len(respx_mock.calls) == 0
+
     def test_env_var_key_resolution_messages_arm(self, respx_mock, monkeypatch):
         """Messages arm resolves api_key from OPENCODE_ZEN_API_KEY."""
         monkeypatch.setenv("OPENCODE_ZEN_API_KEY", "sk-env-messages")
@@ -594,7 +623,7 @@ class TestMockedMessagesCompletion:
             return_value=Response(200, json=_anthropic_response("qwen messages"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         result = litellm.completion(
             model="opencode_zen/qwen3.5-plus",
@@ -620,7 +649,7 @@ class TestMockedMessagesCompletion:
             return_value=Response(200, json=_anthropic_response("defaulted"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         result = litellm.completion(
             model="opencode_zen/claude-sonnet-4-5",
@@ -640,7 +669,7 @@ class TestMockedMessagesCompletion:
             return_value=Response(200, json=_anthropic_response("go defaulted"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         result = litellm.completion(
             model="opencode_go/qwen3.7-plus",
@@ -660,7 +689,7 @@ class TestMockedMessagesCompletion:
             return_value=Response(200, json=_anthropic_response("explicit"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         result = litellm.completion(
             model="opencode_zen/claude-sonnet-4-5",
@@ -713,7 +742,7 @@ class TestMessagesArmStreaming:
             )
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         result = litellm.completion(
             model="opencode_zen/claude-sonnet-4-5",
             messages=[{"role": "user", "content": "hi"}],
@@ -738,7 +767,7 @@ class TestMessagesArmStreaming:
             )
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         litellm.completion(
             model="opencode_zen/claude-sonnet-4-5",
             messages=[{"role": "user", "content": "hi"}],
@@ -770,7 +799,7 @@ class TestMessagesArmAcompletion:
             return_value=Response(200, json=_anthropic_response("async"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         result = await litellm.acompletion(
             model="opencode_zen/claude-sonnet-4-5",
             messages=[{"role": "user", "content": "hi"}],
@@ -789,7 +818,7 @@ class TestMessagesArmAcompletion:
             return_value=Response(200, json=_anthropic_response("async"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-key")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-key")
         await litellm.acompletion(
             model="opencode_zen/claude-sonnet-4-5",
             messages=[{"role": "user", "content": "hi"}],
@@ -821,7 +850,7 @@ class TestMessagesArmReturnShape:
         monkeypatch.setattr(litellm, "opencode_zen_api_key", None)
         monkeypatch.setattr(litellm, "opencode_go_api_key", None)
         monkeypatch.setattr(litellm, "opencode_api_key", None)
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "api_base", None)
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         litellm.in_memory_llm_clients_cache.flush_cache()

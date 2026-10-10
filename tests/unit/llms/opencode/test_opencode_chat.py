@@ -278,7 +278,7 @@ class TestMockedCompletion:
             return_value=Response(200, json=_make_response("kimi-k2.6", "Hello"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         result = litellm.completion(
             model="opencode_zen/kimi-k2.6",
@@ -606,6 +606,33 @@ class TestMockedCompletion:
         auth = respx_mock.calls[0].request.headers["Authorization"]
         assert auth == "Bearer sk-opencode"
         assert "sk-global-other-provider" not in auth
+
+    def test_global_api_key_never_used_without_an_opencode_key(self, respx_mock, monkeypatch):
+        """No OpenCode key configured must send no Authorization header at all.
+
+        The precedence test above only proves a surface-specific key wins when
+        both are set; it does not cover the actually-vulnerable path where no
+        OpenCode key exists. That gap is exactly the cross-provider credential
+        disclosure this regression guards: without it, a mixed-provider
+        deployment's global default key would be forwarded to opencode.ai as
+        the Bearer credential instead of the request going out unauthenticated.
+        """
+        respx_mock.post("https://opencode.ai/zen/v1/chat/completions").mock(
+            return_value=Response(200, json=_make_response("kimi-k2.6", "ok"))
+        )
+
+        monkeypatch.setattr(litellm, "api_key", "sk-global-other-provider")
+        monkeypatch.setattr(litellm, "opencode_zen_api_key", None)
+        monkeypatch.setattr(litellm, "opencode_api_key", None)
+        monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
+        result = litellm.completion(
+            model="opencode_zen/kimi-k2.6",
+            messages=[{"role": "user", "content": "hi"}],
+            custom_llm_provider="opencode_zen",
+        )
+
+        assert result is not None
+        assert "Authorization" not in respx_mock.calls[0].request.headers
 
 
 # ---------------------------------------------------------------------------

@@ -300,7 +300,7 @@ class TestGoMockedCompletion:
             return_value=Response(200, json=_make_responses_response("gpt-5.6-luna", "go responses work"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         result = litellm.completion(
             model="opencode_go/gpt-5.6-luna",
@@ -361,7 +361,7 @@ class TestGoMockedCompletion:
 
         respx_mock.post(GO_RESPONSE_ENDPOINT).mock(side_effect=capture_request)
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
 
         result = litellm.completion(

@@ -299,7 +299,7 @@ class TestMockedCompletion:
             return_value=Response(200, json=_make_responses_response("gpt-5.5", "responses work"))
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
         result = litellm.completion(
             model="opencode_zen/gpt-5.5",
@@ -347,7 +347,7 @@ class TestMockedCompletion:
 
         respx_mock.post(ZEN_RESPONSE_ENDPOINT).mock(side_effect=capture_request)
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
 
         result = litellm.completion(
@@ -633,7 +633,7 @@ class TestTakeoverBeforeDispatch:
             return_value=Response(500, json={"error": "DISPATCH_SHOULD_NOT_BE_REACHED"})
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
 
         result = litellm.completion(
@@ -659,7 +659,7 @@ class TestTakeoverBeforeDispatch:
             return_value=Response(500, json={"error": "MESSAGES_DISPATCH_SHOULD_NOT_BE_REACHED"})
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
 
         result = litellm.completion(
@@ -694,7 +694,7 @@ class TestTakeoverBeforeDispatch:
             )
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
 
         litellm.completion(
@@ -723,7 +723,7 @@ class TestTakeoverBeforeDispatch:
             )
         )
 
-        monkeypatch.setattr(litellm, "api_key", "sk-fake")
+        monkeypatch.setattr(litellm, "opencode_api_key", "sk-fake")
         monkeypatch.setattr(litellm, "disable_aiohttp_transport", True)
 
         result = litellm.completion(

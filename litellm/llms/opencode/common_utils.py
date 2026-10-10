@@ -150,11 +150,12 @@ def resolve_opencode_api_key(surface: str, api_key: str | None = None) -> str | 
     """Resolve the OpenCode key for *surface*, most specific source first.
 
     Explicit argument, then the surface-specific module attribute and env var,
-    then the shared OpenCode module attribute and env var, and finally the
-    generic ``litellm.api_key``. Deliberately never falls back to
-    ANTHROPIC_API_KEY: the messages arm speaks the Anthropic wire format but
-    terminates at opencode.ai, so an Anthropic-shaped fallback would hand the
-    caller's first-party Anthropic key to a third party.
+    then the shared OpenCode module attribute and env var. Deliberately never
+    falls back to ``litellm.api_key`` or ``ANTHROPIC_API_KEY``: both are
+    process-wide defaults callers set for an unrelated provider, and either
+    fallback would hand that provider's credential to opencode.ai on any
+    install that configures a global default key without an OpenCode-specific
+    one.
     """
     import litellm
 
@@ -165,7 +166,6 @@ def resolve_opencode_api_key(surface: str, api_key: str | None = None) -> str | 
         or get_secret_str(f"OPENCODE_{surface_upper}_API_KEY")
         or litellm.opencode_api_key
         or get_secret_str("OPENCODE_API_KEY")
-        or litellm.api_key
     )
 
 
