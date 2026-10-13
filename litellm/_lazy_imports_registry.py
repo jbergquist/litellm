@@ -22,6 +22,7 @@ LITELLM_LOGGING_NAMES: Final = (
 
 # Utils names that support lazy loading via _lazy_import_utils
 UTILS_NAMES: Final = (
+    "run_server",
     "exception_type",
     "get_optional_params",
     "get_response_string",
@@ -35,6 +36,7 @@ UTILS_NAMES: Final = (
     "supports_parallel_function_calling",
     "supports_vision",
     "supports_audio_input",
+    "supports_video_input",
     "supports_audio_output",
     "supports_system_messages",
     "supports_reasoning",
@@ -162,9 +164,13 @@ LLM_CONFIG_NAMES: Final = (
     "PerplexityDecisionsConfig",
     "TypeSafeDecisionsConfig",
     "OpenRouterDecisionsConfig",
+    "FireworksAIDecisionsConfig",
     "CloudflareDecisionsConfig",
     "StrandsDeciderDecisionsConfig",
+    "DatabricksDecisionsConfig",
+    "HostedVLLMDecisionsConfig",
     "OpenAIDecisionsConfig",
+    "AzureAIDecisionsConfig",
     "NvidiaNimRerankConfig",
     "NvidiaNimRankingConfig",
     "VertexAIRerankConfig",
@@ -278,6 +284,7 @@ LLM_CONFIG_NAMES: Final = (
     "NvidiaNimConfig",
     "NvidiaNimEmbeddingConfig",
     "FeatherlessAIConfig",
+    "ScaleDownChatConfig",
     "CerebrasConfig",
     "NadirConfig",
     "BasetenConfig",
@@ -464,6 +471,7 @@ UTILS_MODULE_NAMES: Final = (
 
 # Import maps for registry pattern - reduces repetition
 _UTILS_IMPORT_MAP: Final = {
+    "run_server": ("litellm.proxy.proxy_cli", "run_server"),
     "exception_type": (".utils", "exception_type"),
     "get_optional_params": (".utils", "get_optional_params"),
     "get_response_string": (".utils", "get_response_string"),
@@ -480,6 +488,7 @@ _UTILS_IMPORT_MAP: Final = {
     ),
     "supports_vision": (".utils", "supports_vision"),
     "supports_audio_input": (".utils", "supports_audio_input"),
+    "supports_video_input": (".utils", "supports_video_input"),
     "supports_audio_output": (".utils", "supports_audio_output"),
     "supports_system_messages": (".utils", "supports_system_messages"),
     "supports_reasoning": (".utils", "supports_reasoning"),
@@ -730,12 +739,19 @@ _LLM_CONFIGS_IMPORT_MAP: Final = {
     "PerplexityDecisionsConfig": (".llms.perplexity.decisions.transformation", "PerplexityDecisionsConfig"),
     "TypeSafeDecisionsConfig": (".llms.typesafe.decisions.transformation", "TypeSafeDecisionsConfig"),
     "OpenRouterDecisionsConfig": (".llms.openrouter.decisions.transformation", "OpenRouterDecisionsConfig"),
+    "FireworksAIDecisionsConfig": (".llms.fireworks_ai.decisions.transformation", "FireworksAIDecisionsConfig"),
     "CloudflareDecisionsConfig": (".llms.cloudflare.decisions.transformation", "CloudflareDecisionsConfig"),
     "StrandsDeciderDecisionsConfig": (
         ".llms.strands_decider.decisions.transformation",
         "StrandsDeciderDecisionsConfig",
     ),
+    "DatabricksDecisionsConfig": (".llms.databricks.decisions.transformation", "DatabricksDecisionsConfig"),
+    "HostedVLLMDecisionsConfig": (
+        ".llms.hosted_vllm.decisions.transformation",
+        "HostedVLLMDecisionsConfig",
+    ),
     "OpenAIDecisionsConfig": (".llms.openai.decisions.transformation", "OpenAIDecisionsConfig"),
+    "AzureAIDecisionsConfig": (".llms.azure_ai.decisions.transformation", "AzureAIDecisionsConfig"),
     "NvidiaNimRerankConfig": (
         ".llms.nvidia_nim.rerank.transformation",
         "NvidiaNimRerankConfig",
@@ -1113,6 +1129,10 @@ _LLM_CONFIGS_IMPORT_MAP: Final = {
     "FeatherlessAIConfig": (
         ".llms.featherless_ai.chat.transformation",
         "FeatherlessAIConfig",
+    ),
+    "ScaleDownChatConfig": (
+        ".llms.scaledown.chat.transformation",
+        "ScaleDownChatConfig",
     ),
     "CerebrasConfig": (".llms.cerebras.chat", "CerebrasConfig"),
     "NadirConfig": (".llms.nadir.chat.transformation", "NadirConfig"),
